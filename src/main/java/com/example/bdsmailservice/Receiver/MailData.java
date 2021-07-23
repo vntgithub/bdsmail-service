@@ -3,16 +3,16 @@ package com.example.bdsmailservice.Receiver;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
+
+@NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class RabbitMQMessage   {
+public class MailData   {
     String nameUser;
-    String productTitle;
-    String  address;
-    Long price;
     String email;
-    String phone;
+    String[] listLink;
 
 }

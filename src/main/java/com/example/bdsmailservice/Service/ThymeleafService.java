@@ -9,6 +9,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+
+
 @Service
 public class ThymeleafService {
     private static final String MAIL_TEMPLATE_BASE_NAME = "mail/MailMessages";
@@ -47,12 +49,10 @@ public class ThymeleafService {
         return templateResolver;
     }
 
-    public String getContent(String nameUser, String productTitle, Long price, String address) {
+    public String getContent(String nameUser, String[] listLink) {
         final Context context = new Context();
         context.setVariable("name", nameUser);
-        context.setVariable("productTitle", productTitle);
-        context.setVariable("price", price);
-        context.setVariable("address", address);
+        context.setVariable("listLink", listLink);
 
         return templateEngine.process(TEMPLATE_NAME, context);
     }

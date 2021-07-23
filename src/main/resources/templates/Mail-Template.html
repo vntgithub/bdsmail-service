@@ -2,10 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <p style="color: red; font-weight: bold" th:text="'Dear ' + ${name} + ','"></p>
-<p th:text="'Có một sản phẩm mới:' + ${productTitle} + '.'"></p>
-<p th:text="'Giá: ' + ${price} + ' đồng.'"></p>
-<p th:text="'Tại địa chỉ: ' + ${address} + ' .'"></p>
-<p th:text="'Chúng tôi nhận thấy sản phẩm này bạn đang cần tìm, hãy xem đến trang và xem thử!.'"></p>
+<p>Chúng tôi có các sản phẩm mới có phù hợp với nhu cầu đang cần của bạn.</p>
+<p>Hãy đến wesite để xem thử!</p>
+<p>Link sản phẩm: </p>
+<ul>
+    <th:block th:each="link : ${listLink}">
+        <li th:utext="${link}"></li>
+    </th:block>
+</ul>
+
 <p>Thanks!</p>
 </body>
 </html>

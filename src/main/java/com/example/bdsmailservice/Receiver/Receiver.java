@@ -1,13 +1,12 @@
 package com.example.bdsmailservice.Receiver;
 
 import com.example.bdsmailservice.Service.MailService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.amqp.core.Message;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Map;
 
 
 @Component
@@ -16,22 +15,24 @@ public class Receiver {
 
     private final  MailService mailService;
 
-
     public void receiveMessage(byte[] message) throws IOException {
 
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object>  map = mapper.readValue(new String(message), Map.class);
+        JSONObject json = new JSONObject(new String(message));
+        JSONArray arr = json.getJSONArray("listId");
+        String[] listId = new String[arr.length()];
+        for(int i = 0; i < json.getJSONArray("listId").length(); i++){
+            //listId.add(arr.getLong(i));
+            //listId.add(arr.getLong(i));
+            listId[i] = "http://localhost:3000/productdetail/" + arr.getLong(i);
+        }
 
+        MailData mailData = new MailData(
+                json.getString("nameUser"),
+                json.getString("email"),
+                listId
+        );
 
-        RabbitMQMessage rabbitMQMessage = new RabbitMQMessage(map.get("nameUser").toString(),
-                map.get("productTitle").toString(),
-                map.get("address").toString(),
-                Long.parseLong(map.get("price").toString()),
-                map.get("email").toString(),
-                map.get("phone").toString());
-
-        System.out.println(rabbitMQMessage);
-        mailService.sendMail(rabbitMQMessage);
+        mailService.sendMail(mailData);
 
     }
 

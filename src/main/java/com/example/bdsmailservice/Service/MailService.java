@@ -1,6 +1,6 @@
 package com.example.bdsmailservice.Service;
 
-import com.example.bdsmailservice.Receiver.RabbitMQMessage;
+import com.example.bdsmailservice.Receiver.MailData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class MailService {
     @Autowired
     ThymeleafService thymeleafService;
 
-    public void sendMail(RabbitMQMessage rabbitMQMessage) {
+    public void sendMail(MailData mailData) {
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.starttls.enable", "true");
@@ -47,15 +47,13 @@ public class MailService {
                 });
         Message message = new MimeMessage(session);
         try {
-            message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(rabbitMQMessage.getEmail())});
+            message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(mailData.getEmail())});
 
             message.setFrom(new InternetAddress(email));
             message.setSubject("Gợi ý sản phẩm từ BDS");
             message.setContent(thymeleafService.getContent(
-                    rabbitMQMessage.getNameUser(),
-                    rabbitMQMessage.getProductTitle(),
-                    rabbitMQMessage.getPrice(),
-                    rabbitMQMessage.getAddress()
+                    mailData.getNameUser(),
+                    mailData.getListLink()
                     ), CONTENT_TYPE_TEXT_HTML);
             Transport.send(message);
         } catch (MessagingException e) {
